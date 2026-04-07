@@ -1,0 +1,25 @@
+#define MQ135_PIN 4
+#define MQ137_PIN 3
+
+void setup() {
+  Serial.begin(115200);  
+  Serial1.begin(9600, SERIAL_8N1, 20, 21); // RX, TX
+
+  delay(2000); // allow sensors to stabilize a bit
+}
+
+void loop() {
+  int mq135 = analogRead(MQ135_PIN);
+  int mq137 = analogRead(MQ137_PIN);
+
+  // Simple filtering
+  mq135 = (mq135 + analogRead(MQ135_PIN)) / 2;
+  mq137 = (mq137 + analogRead(MQ137_PIN)) / 2;
+
+  String data = String(mq135) + "," + String(mq137);
+
+  Serial.println(data);   // Debug
+  Serial1.println(data);  // Send to Raspberry Pi
+
+  delay(1000);
+}
